@@ -146,15 +146,24 @@ namespace MicroRabbit.Infra.Bus
         {
             if (_handlers.ContainsKey(eventName))
             {
+                //get al the subscribers for that event
                 var subscriptions = _handlers[eventName];
+                //loop through each subscription in subscriptions
                 foreach(var subscription in subscriptions)
                 {
+                    //create handler using dynamic approach. Create instance of that type
                     var handler = Activator.CreateInstance(subscription);
+                    //if null continue looping until found one.
                     if (handler == null) continue;
+                    //Now we can look to all of our events memeber , is our local dictionary
+                    //Get the first where the name of that event is equal to the incoming eventname.
                     var eventType = _eventTypes.SingleOrDefault(t => t.Name == eventName);
+                    //Now we have the handler and the eventtype (ex. CourseCreated). We can take the message and desirialize it
                     var @event = JsonConvert.DeserializeObject(message, eventType);
+                    //
                     var concreteType = typeof(IEventHandler<>).MakeGenericType(eventType);
-                    //routing to the right handler in all our microservice messages
+                    //Lets now invoke the main method that is the handler to do the work on this type of event.
+                    //Routing to the right handler in all our microservice messages
                     await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { @event });
                 }
             }
