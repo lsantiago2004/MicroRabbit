@@ -41,6 +41,7 @@ namespace MicroRabbit.Infra.Bus
         //to simply publish to our Queue.
         public void Publish<T>(T @event) where T : Event
         {
+ 
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
