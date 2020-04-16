@@ -28,5 +28,13 @@ namespace MicroRabbit.Banking.Api.Controllers
         {
             return Ok(_accountService.GetAccounts());
         }
+
+        //expose another microservice endpoint
+        [HttpPost]
+        public IActionResult Post([FromBody] AccountTransfer accountTransfer)
+        {
+            _accountService.Transfer(accountTransfer);
+            return Ok(accountTransfer);
+        }
     }
 }
