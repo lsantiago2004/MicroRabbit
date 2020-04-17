@@ -59,6 +59,7 @@ namespace MicroRabbit.Banking.Api
 
             app.UseHttpsRedirection();
 
+            //swagger
             app.UseOpenApi();//serve OpenAPI/swagger documents
             app.UseSwaggerUi3(); //serve Swagger UI
 
